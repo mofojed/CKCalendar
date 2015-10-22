@@ -79,7 +79,7 @@
     _date = date;
     if (date) {
         NSDateComponents *comps = [self.calendar components:NSDayCalendarUnit|NSMonthCalendarUnit fromDate:date];
-        [self setTitle:[NSString stringWithFormat:@"%l", (long)comps.day] forState:UIControlStateNormal];
+        [self setTitle:[NSString stringWithFormat:@"%ld", (long)comps.day] forState:UIControlStateNormal];
     } else {
         [self setTitle:@"" forState:UIControlStateNormal];
     }
