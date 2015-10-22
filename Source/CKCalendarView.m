@@ -155,6 +155,9 @@
     [self addSubview:highlight];
     self.highlight = highlight;
 
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"CKCalendarPod" ofType:@"bundle"];
+    NSBundle *bundle = [NSBundle bundleWithPath:bundlePath];
+    
     // SET UP THE HEADER
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
     titleLabel.textAlignment = NSTextAlignmentCenter;
@@ -164,14 +167,16 @@
     self.titleLabel = titleLabel;
 
     UIButton *prevButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [prevButton setImage:[UIImage imageNamed:@"left_arrow.png"] forState:UIControlStateNormal];
+    prevButton.backgroundColor = [UIColor yellowColor];
+    [prevButton setImage:[[UIImage imageNamed:@"left_arrow" inBundle:bundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     prevButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleRightMargin;
     [prevButton addTarget:self action:@selector(_moveCalendarToPreviousMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:prevButton];
     self.prevButton = prevButton;
 
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [nextButton setImage:[UIImage imageNamed:@"right_arrow.png"] forState:UIControlStateNormal];
+    nextButton.backgroundColor = [UIColor yellowColor];
+    [nextButton setImage:[[UIImage imageNamed:@"right_arrow" inBundle:bundle compatibleWithTraitCollection:nil] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] forState:UIControlStateNormal];
     nextButton.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin;
     [nextButton addTarget:self action:@selector(_moveCalendarToNextMonth) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:nextButton];
@@ -501,8 +506,8 @@
 }
 
 - (void)setMonthButtonColor:(UIColor *)color {
-    [self.prevButton setImage:[CKCalendarView _imageNamed:@"left_arrow.png" withColor:color] forState:UIControlStateNormal];
-    [self.nextButton setImage:[CKCalendarView _imageNamed:@"right_arrow.png" withColor:color] forState:UIControlStateNormal];
+    self.prevButton.tintColor = color;
+    self.nextButton.tintColor = color;
 }
 
 - (void)setInnerBorderColor:(UIColor *)color {
@@ -626,30 +631,6 @@
     NSInteger startDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSEraCalendarUnit forDate:startDate];
     NSInteger endDay = [self.calendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSEraCalendarUnit forDate:endDate];
     return endDay - startDay;
-}
-
-+ (UIImage *)_imageNamed:(NSString *)name withColor:(UIColor *)color {
-    UIImage *img = [UIImage imageNamed:name];
-
-    UIGraphicsBeginImageContextWithOptions(img.size, NO, [UIScreen mainScreen].scale);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    [color setFill];
-
-    CGContextTranslateCTM(context, 0, img.size.height);
-    CGContextScaleCTM(context, 1.0, -1.0);
-
-    CGContextSetBlendMode(context, kCGBlendModeColorBurn);
-    CGRect rect = CGRectMake(0, 0, img.size.width, img.size.height);
-    CGContextDrawImage(context, rect, img.CGImage);
-
-    CGContextClipToMask(context, rect, img.CGImage);
-    CGContextAddRect(context, rect);
-    CGContextDrawPath(context,kCGPathFill);
-
-    UIImage *coloredImg = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    return coloredImg;
 }
 
 @end

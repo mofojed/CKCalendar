@@ -100,8 +100,7 @@ Pod::Spec.new do |s|
   #
 
   # s.resource  = "icon.png"
-  s.resources = "Source/resources/*"
-
+  s.resource_bundles = { "CKCalendarPod" => [ "Source/resource.xcassets"] }
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
 
